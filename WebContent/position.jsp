@@ -23,8 +23,8 @@
 	margin:0px;
 	height: 100%; 
 	}  
-
 </style>
+
 <script type="text/javascript">
 //页面加载完成执行
  $(function(){
@@ -36,60 +36,59 @@ function showRent(){
 	// Jquery发送异步请求
 	 $.post("${pageContext.request.contextPath}/LYPosition?"+new Date().getTime(),{method:"requestPosition"},function(data){
 		for(var i=0;i<data.length;i++){
-			//定义变量，在架数目，最大数目
-			  var operNum = data[i].rentcount;
-			  var maxNumber = data[i].restorecount;
-			  var zoneName = data[i].name;
+			//定义变量
+		    var operNum = data[i].rentcount;
+			var maxNumber = data[i].restorecount;
+			var zoneName = data[i].name;
 			 
-				//根据在架数目不同显示不同图标
-				  //低储量时
-				  if(operNum < 0.2*maxNumber){
-					  var icon = new AMap.Icon({
-	    					image: 'images/bike/green_small.png',
-	    					size: new AMap.Size(32, 32)
-	    				});
-					//高储量时
-				  }else if(operNum > 0.8*maxNumber){
-					  var icon = new AMap.Icon({
-	    					image: 'images/bike/red_small.png',
-	    					size: new AMap.Size(32, 32)
-	    				});
-					 //两者之间
-				  }else{
-					  var icon = new AMap.Icon({
-	    					image: 'images/bike/blue_small.png',
-	    					size: new AMap.Size(32, 32)
-	    				});
-				  }
-				
-				
-				  var lng = data[i].lon;
-				  var lat = data[i].lat;
-				  
-  				 marker = new AMap.Marker({
-  					icon: icon,
-  					position: [lng,lat],
-  					offset: new AMap.Pixel(-16,-32),
-  					title: data[i].number+":"+data[i].name+":总数"+data[i].restorecount+":在架"+data[i].rentcount,
-  					map: map
-  				});
-  				
-  				 //点击查看
-  				   marker.content =  '<div class="info-title">'+data[i].name+"&nbsp;"+data[i].number+"&nbsp;"+'</div><div class="info-content">'+
-  	               					 '可借:'+data[i].rentcount+'<br/>'+
-  	               					 '可还:'+(data[i].restorecount-data[i].rentcount)+'<br/>'+
-  	               					 '</div>'
-  			        marker.on('click', markerClick);
-  			        marker.emit('click', {target: marker});
-			
+			//根据在架数目不同显示不同图标
+			//低储量时
+			if(operNum < 0.2*maxNumber){
+				var icon = new AMap.Icon({
+    				image: 'images/bike/green_small.png',
+    				size: new AMap.Size(32, 32)
+    			});
+			//高储量时
+			}else if(operNum > 0.8*maxNumber){
+				var icon = new AMap.Icon({
+    				image: 'images/bike/red_small.png',
+    				size: new AMap.Size(32, 32)
+    		});
+			//两者之间
+			}else{
+				var icon = new AMap.Icon({
+    				image: 'images/bike/blue_small.png',
+    				size: new AMap.Size(32, 32)
+    		});
 		}
+				
+				
+		   var lng = data[i].lon;
+		   var lat = data[i].lat;
+				  
+		   marker = new AMap.Marker({
+				icon: icon,
+				position: [lng,lat],
+				offset: new AMap.Pixel(-16,-32),
+				title: data[i].number+":"+data[i].name+":总数"+data[i].restorecount+":在架"+data[i].rentcount,
+				map: map
+			});
+  				
+  		 //点击查看
+	     marker.content =  '<div class="info-title">'+data[i].name+"&nbsp;"+data[i].number+"&nbsp;"+'</div><div class="info-content">'+
+             			   '可借:'+data[i].rentcount+'<br/>'+
+             			   '可还:'+(data[i].restorecount-data[i].rentcount)+'<br/>'+
+             			   '</div>'
+         marker.on('click', markerClick);
+         marker.emit('click', {target: marker});
+	}
 		
 		//图标点击事件 
 	    function markerClick(e) {
 	    	infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -30)});
 	        infoWindow.setContent(e.target.content);
 	        infoWindow.open(map, e.target.getPosition());
-	        }
+	      }
 	}); 
 }
 </script>

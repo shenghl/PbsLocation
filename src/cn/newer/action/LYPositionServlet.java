@@ -12,45 +12,42 @@ import javax.servlet.http.HttpServletResponse;
 import cn.newer.po.PbsLongYouDate;
 import cn.newer.service.LYPositionService;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 /**
- * 用于处理jsp传来的请求
+ * 处理页面请求
  */
-//@WebServlet("/LYPosition")
-public class LYPosition extends HttpServlet {
-	//处理页面的的requestLocation的位置请求
+public class LYPositionServlet extends HttpServlet {
+	
+	private static final long serialVersionUID = 1L;
+
+	//处理jsp页面的位置请求
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("======收到来自jsp的请求=======");
-		//调用service
+		//创建LYPositionService对象
 		LYPositionService service = new LYPositionService();
 		PrintWriter out = null;
 		try {
+			//接收service方法中的返回值
 			List<PbsLongYouDate> list = service.position();
-//			DataGridResultInfo dataGridResultInfo = new DataGridResultInfo();
-//			
-//			dataGridResultInfo.setTotal(list.size());
-//			dataGridResultInfo.setRows(list);
-//			
-			
-			
+			//设置编码格式
 			response.setCharacterEncoding("UTF-8");
 	        response.setContentType("application/json; charset=utf-8");
-
-	        JSONArray jsonObject = JSONArray.fromObject( list );
-	        System.out.println(jsonObject);
+	        //封装数据
+	        JSONArray jsonObject = JSONArray.fromObject(list);
+	        //输出测试
+	        //System.out.println("LYPositionServlet_dopost方法输出测试："+jsonObject);
 	        String jsonData = jsonObject.toString();
-
+	        //数据输出
 			out = response.getWriter();
 			out.println(jsonData);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally{
+			//关闭流
 			if(out != null){
 				out.close();
 			}
 		}
 	}
-
 }
